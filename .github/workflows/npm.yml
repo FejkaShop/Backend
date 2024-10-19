@@ -7,8 +7,6 @@ on:
         branches: [ "pipelines", "master" ]
 
 jobs:
-
-
     format:
         runs-on: ubuntu-latest
 
