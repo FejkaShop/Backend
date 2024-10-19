@@ -2,9 +2,9 @@ name: NodeJS CI
 
 on:
     push:
-        branches: [ "origin/pipelines", "origin/master" ]
+        branches: ["master" ]
     pull_request:
-        branches: [ "origin/pipelines", "origin/master" ]
+        branches: ["master" ]
 
 jobs:
     format:
@@ -15,7 +15,7 @@ jobs:
                 node-version: [18.x, 20.x, 22.x]
 
         steps:
-            - name: Checkout to ${{ github.head_ref }}
+            - name: Checkout to ${{ github.ref_name }}
               uses: actions/checkout@v4
               with:
                 ref: ${{ github.head_ref }}
@@ -27,7 +27,7 @@ jobs:
             - run: npm ci
             - run: npm run format
 
-            - name: Commit changes to ${{ github.head_ref }}
+            - name: Commit changes to ${{ github.repository }}
               uses: stefanzweifel/git-auto-commit-action@v4
               with:
                 commit_message: Apply formatting changes
