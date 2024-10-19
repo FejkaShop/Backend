@@ -13,7 +13,13 @@ npx prisma generate
 npx prisma migrate dev --name init
 npm run start
 ```
+
 ```bash
 npx prisma studio -- Use to start database browsing
 npx prisma migrate reset -- Use only to reset database
+```
+
+run linter
+```bash
+npx eslint .
 ```
