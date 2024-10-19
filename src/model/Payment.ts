@@ -1,15 +1,15 @@
 export class Payment {
-    id: number;
-    orderId: number;
-    amount: number;
-    paymentMethod: PaymentMethod;
-    status: PaymentStatus;
-    createdAt: Date;
-    updatedAt: Date;
 
-    constructor(data: Partial<Payment>) {
-        Object.assign(this, data);
-    }
+    constructor(
+        id: number,
+        orderId: number,
+        amount: number,
+        paymentMethod: PaymentMethod,
+        status: PaymentStatus,
+        createdAt: Date,
+        updatedAt: Date,
+    ) {}
+
 }
 
 export enum PaymentMethod {

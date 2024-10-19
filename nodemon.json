@@ -1,5 +1,6 @@
 {
-    "watch": ["."],
+    "watch": ["src"],
     "ext": "ts",
-    "exec": "ts-node app.ts"
+    "exec": "ts-node app.ts",
+    "delay": 1000
 }

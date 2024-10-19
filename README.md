@@ -2,7 +2,7 @@
 - Author: Pavel Mikula (MIK0486)
 
 ## Instalation
-Using docker-compose
+Using docker-compose // TODO: Implement
 ```bash
 docker-compose up
 ```
