@@ -1,5 +1,4 @@
 export class Review {
-
     constructor(
         id: number,
         productId: number,
@@ -7,7 +6,6 @@ export class Review {
         rating: number,
         comment: string | null,
         createdAt: Date,
-        updatedAt: Date,
+        updatedAt: Date
     ) {}
-
 }

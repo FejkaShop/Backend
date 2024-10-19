@@ -1,7 +1,7 @@
-import {PrismaClient} from "@prisma/client";
-import insertUsers from "./data/users";
-import insertCategories from "./data/categories";
-import insertProducts from "./data/products";
+import { PrismaClient } from '@prisma/client';
+import insertUsers from './data/users';
+import insertCategories from './data/categories';
+import insertProducts from './data/products';
 
 const prisma = new PrismaClient();
 
@@ -10,7 +10,7 @@ async function main() {
     await insertCategories(prisma);
     await insertProducts(prisma);
 
-    console.log("Data seeded successfully");
+    console.log('Data seeded successfully');
 }
 
 main()

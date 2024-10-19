@@ -1,8 +1,7 @@
-import Joi from "joi";
-import {Category} from "./Category";
+import Joi from 'joi';
+import { Category } from './Category';
 
 export class Product {
-
     constructor(
         id: number,
         name: string,
@@ -12,7 +11,7 @@ export class Product {
         category: Category,
         images: string[],
         createdAt: Date,
-        updatedAt: Date,
+        updatedAt: Date
     ) {}
 
     static validate(data: Partial<Product>): Joi.ValidationResult {
@@ -24,10 +23,9 @@ export class Product {
             categoryId: Joi.number().integer().positive().required(),
             images: Joi.array().items(Joi.string()).optional(),
             createdAt: Joi.date().optional(),
-            updatedAt: Joi.date().optional(),
+            updatedAt: Joi.date().optional()
         });
 
         return schema.validate(data);
     }
-
 }

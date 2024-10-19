@@ -1,5 +1,4 @@
 export class Address {
-
     constructor(
         id: number,
         userId: number,
@@ -11,5 +10,4 @@ export class Address {
         createdAt: Date,
         updatedAt: Date
     ) {}
-
 }
