@@ -2,9 +2,9 @@ name: NodeJS CI
 
 on:
     push:
-        branches: [ "pipelines" ]
+        branches: [ "pipelines", "master" ]
     pull_request:
-        branches: [ "pipelines" ]
+        branches: [ "pipelines", "master" ]
 
 jobs:
 
