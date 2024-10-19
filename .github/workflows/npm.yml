@@ -2,13 +2,11 @@ name: NodeJS CI
 
 on:
     push:
-        branches: [ "pipelines", "master" ]
+        branches: [ "origin/pipelines", "origin/master" ]
     pull_request:
-        branches: [ "pipelines", "master" ]
+        branches: [ "origin/pipelines", "origin/master" ]
 
 jobs:
-
-
     format:
         runs-on: ubuntu-latest
 
