@@ -1,5 +1,5 @@
-import {UserRole} from "../../model/User";
-import {PrismaClient} from "@prisma/client";
+import { UserRole } from '../../model/User';
+import { PrismaClient } from '@prisma/client';
 
 const entries = [
     {
@@ -13,22 +13,22 @@ const entries = [
                 city: 'Anytown',
                 state: 'CA',
                 country: 'USA',
-                postalCode: '12345',
-            },
-        },
+                postalCode: '12345'
+            }
+        }
     },
     {
         email: 'admin@example.com',
         password: 'securepassword', // You might want to hash this in a real app
         name: 'Admin User',
-        role: UserRole.ADMIN,
+        role: UserRole.ADMIN
     }
-]
+];
 
 async function insertEntries(prismaClient: PrismaClient) {
     for (const entry of entries) {
         await prismaClient.user.create({
-            data: entry,
+            data: entry
         });
     }
 }

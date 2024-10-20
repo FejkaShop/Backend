@@ -1,7 +1,7 @@
-import { Router, Request, Response } from 'express';
-import {Prisma, PrismaClient} from '@prisma/client';
-import { Pagination } from "../model/Pagination";
-import { Product } from "../model/Product";
+import { Request, Response, Router } from 'express';
+import { Prisma, PrismaClient } from '@prisma/client';
+import { Pagination } from '../model/Pagination';
+import { Product } from '../model/Product';
 import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
 const prisma: PrismaClient = new PrismaClient();
@@ -25,7 +25,7 @@ router.post('/', async (req: Request, res: Response) => {
                 stock: value.stock,
                 categoryId: value.categoryId,
                 createdAt: new Date(),
-                updatedAt: new Date(),
+                updatedAt: new Date()
             }
         });
 
@@ -46,7 +46,7 @@ router.get('/', async (req: Request, res: Response) => {
             take: limit,
             skip: offset,
             include: {
-                category: true,
+                category: true
             }
         });
 
@@ -74,7 +74,9 @@ router.get('/:id', async (req: Request, res: Response) => {
         });
 
         if (!product) {
-            res.status(404).json({ error: `Product with ID '${id}' not found` });
+            res.status(404).json({
+                error: `Product with ID '${id}' not found`
+            });
             return;
         }
 
@@ -104,7 +106,7 @@ router.put('/:id', async (req: Request, res: Response) => {
                 price: value.price,
                 stock: value.stock,
                 categoryId: value.categoryId,
-                updatedAt: new Date(),
+                updatedAt: new Date()
             }
         });
 
@@ -112,7 +114,9 @@ router.put('/:id', async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2025') {
-                res.status(404).json({ error: `Product with ID '${id}' not found` });
+                res.status(404).json({
+                    error: `Product with ID '${id}' not found`
+                });
                 return;
             }
         }
@@ -133,7 +137,9 @@ router.delete('/:id', async (req: Request, res: Response) => {
     } catch (error) {
         if (error instanceof PrismaClientKnownRequestError) {
             if (error.code === 'P2025') {
-                res.status(404).json({ error: `Product with ID '${id}' not found` });
+                res.status(404).json({
+                    error: `Product with ID '${id}' not found`
+                });
                 return;
             }
         }
