@@ -70,7 +70,10 @@ router.get('/:id', async (req: Request, res: Response) => {
 
     try {
         const product: Product | null = await prisma.product.findUnique({
-            where: { id: parseInt(id) }
+            where: { id: parseInt(id) },
+            include: {
+                category: true
+            }
         });
 
         if (!product) {
