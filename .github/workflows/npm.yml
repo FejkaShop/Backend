@@ -1,0 +1,71 @@
+name: NodeJS CI
+
+on:
+    push:
+        branches: [ "master", "prettier" ]
+    pull_request:
+        branches: ["master", "prettier" ]
+
+jobs:
+    prettier:
+        runs-on: ubuntu-latest
+
+        steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            # Make sure the actual branch is checked out when running on pull requests
+            ref: ${{ github.head_ref }}
+          
+        - name: Commit URL 
+          run: git remote set-url origin https://github-actions:${{github.token}}@github.com/${{github.repository}}.git
+
+        - name: Prettify code
+          uses: creyD/prettier_action@v4.3
+          with:
+            # This part is also where you can pass other options, for example:
+            prettier_options: --write **/*.{js,md,ts}
+            
+
+    lint:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x]
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - run: npm ci
+
+            - name: Lint
+              run: |
+                  npx eslint .
+    
+
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [18.x, 20.x, 22.x]
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Use Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v4
+              with:
+                node-version: ${{ matrix.node-version }}
+
+            - name: Install Dependencies
+              run: |
+                npm install
+            # idk actually what to put into build
+            
