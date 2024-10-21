@@ -2,7 +2,8 @@ import express, { Request, Response } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 
-import productRouter from './src/routes/product.route';
+import productRoutes from './src/routes/product.route';
+import categoryRoutes from './src/routes/category.route';
 import path from 'node:path';
 import { Socket } from 'node:net';
 
@@ -16,7 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routers
-app.use('/products', productRouter);
+app.use('/products', productRoutes);
+app.use('/categories', categoryRoutes);
 
 const PORT = process.env.PORT || 3000;
 
