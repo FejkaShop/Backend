@@ -2,9 +2,9 @@ name: NodeJS CI
 
 on:
     push:
-        branches: [ "master", "prettier" ]
+        branches: [ "master", "Pipelines" ]
     pull_request:
-        branches: ["master", "prettier" ]
+        branches: [ "master", "Pipelines" ]
 
 jobs:
     prettier:
