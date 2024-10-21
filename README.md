@@ -1,7 +1,6 @@
 # Backend Application for ZPSWI Project
 
-- Author: Pavel Mikula (MIK0486)
-
+-   Author: Pavel Mikula (MIK0486)
 
 ## Instalation
 
@@ -26,6 +25,7 @@ npx prisma migrate reset -- Use only to reset database
 ```
 
 ## API Examples
+
 ```json
 {
   "limit": 10,

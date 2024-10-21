@@ -1,13 +1,13 @@
 import { PrismaClient } from '@prisma/client';
 import { Product } from '../model/Product';
-import {Pagination} from "../model/Pagination";
+import { Pagination } from '../model/Pagination';
 
 const prisma: PrismaClient = new PrismaClient();
 
 export class ProductService {
     async createProduct(data: Product): Promise<Product> {
         return prisma.product.create({
-            data: data,
+            data: data
         });
     }
 
@@ -22,7 +22,8 @@ export class ProductService {
             }
         });
 
-        const pagination: Pagination<Product> = new Pagination<Product>(limit, offset, total, offset + limit < total, entries);
+        const hasMore: boolean = offset + limit < total;
+        const pagination: Pagination<Product> = new Pagination<Product>(limit, offset, total, hasMore, entries);
         return new Promise((resolve) => resolve(pagination));
     }
 
@@ -31,14 +32,14 @@ export class ProductService {
             where: { id },
             include: {
                 category: true
-            },
+            }
         });
     }
 
     async updateProduct(id: number, data: Partial<Product>): Promise<Product> {
         return prisma.product.update({
             where: { id },
-            data: data,
+            data: data
         });
     }
 

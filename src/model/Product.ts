@@ -1,5 +1,4 @@
 import Joi from 'joi';
-import { Category } from './Category';
 
 export class Product {
     constructor(

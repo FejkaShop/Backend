@@ -2,10 +2,10 @@ import { Request, Response } from 'express';
 import { Product } from '../model/Product';
 import { Prisma } from '@prisma/client';
 import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
-import {ProductService} from "../services/product.service";
-import {Pagination} from "../model/Pagination";
+import { ProductService } from '../services/product.service';
+import { Pagination } from '../model/Pagination';
 
-const productService = new ProductService();
+const productService: ProductService = new ProductService();
 
 export class ProductController {
     public async createProduct(req: Request, res: Response) {
@@ -13,15 +13,10 @@ export class ProductController {
             const { error, value } = Product.validate(req.body);
 
             if (error) {
-                return res
-                    .status(400)
-                    .json({
-                        status_code: 400,
-                        error: error.message
-                    });
+                return res.status(400).json({ error: error.message });
             }
 
-            const newProduct = await productService.createProduct(value);
+            const newProduct: Product = await productService.createProduct(value);
             res.status(201).json(newProduct);
         } catch (error) {
             console.error(error);
@@ -31,12 +26,10 @@ export class ProductController {
 
     public async getProducts(req: Request, res: Response) {
         try {
-            const limit: number = parseInt(<string> req.query.limit) || 10;
-            const offset: number = parseInt(<string> req.query.offset) || 0;
+            const limit: number = parseInt(<string>req.query.limit) || 10;
+            const offset: number = parseInt(<string>req.query.offset) || 0;
 
             const pagination: Pagination<Product> = await productService.getProducts(limit, offset);
-            console.log(pagination);
-
             res.json(pagination);
         } catch (error) {
             console.error(error);
@@ -87,10 +80,13 @@ export class ProductController {
 
         try {
             await productService.deleteProduct(parseInt(id));
+
             res.status(204).send();
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-                return res.status(404).json({ error: `Product with ID '${id}' not found` });
+                return res.status(404).json({
+                    error: `Product with ID '${id}' not found`
+                });
             }
 
             res.status(500).json({ error });

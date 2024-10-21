@@ -2,30 +2,29 @@ name: NodeJS CI
 
 on:
     push:
-        branches: [ "master", "prettier" ]
+        branches: ['master', 'prettier']
     pull_request:
-        branches: ["master", "prettier" ]
+        branches: ['master', 'prettier']
 
 jobs:
     prettier:
         runs-on: ubuntu-latest
 
         steps:
-        - name: Checkout
-          uses: actions/checkout@v3
-          with:
-            # Make sure the actual branch is checked out when running on pull requests
-            ref: ${{ github.head_ref }}
-          
-        - name: Commit URL 
-          run: git remote set-url origin https://github-actions:${{github.token}}@github.com/${{github.repository}}.git
+            - name: Checkout
+              uses: actions/checkout@v3
+              with:
+                  # Make sure the actual branch is checked out when running on pull requests
+                  ref: ${{ github.head_ref }}
 
-        - name: Prettify code
-          uses: creyD/prettier_action@v4.3
-          with:
-            # This part is also where you can pass other options, for example:
-            prettier_options: --write **/*.{js,md,ts}
-            
+            - name: Commit URL
+              run: git remote set-url origin https://github-actions:${{github.token}}@github.com/${{github.repository}}.git
+
+            - name: Prettify code
+              uses: creyD/prettier_action@v4.3
+              with:
+                  # This part is also where you can pass other options, for example:
+                  prettier_options: --write **/*.{js,md,ts}
 
     lint:
         runs-on: ubuntu-latest
@@ -47,7 +46,6 @@ jobs:
             - name: Lint
               run: |
                   npx eslint .
-    
 
     build:
         runs-on: ubuntu-latest
@@ -62,10 +60,9 @@ jobs:
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
-                node-version: ${{ matrix.node-version }}
+                  node-version: ${{ matrix.node-version }}
 
             - name: Install Dependencies
               run: |
-                npm install
+                  npm install
             # idk actually what to put into build
-            
