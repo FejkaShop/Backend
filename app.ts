@@ -1,15 +1,12 @@
 import express, { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import morgan from 'morgan';
 import cors from 'cors';
 
-import productRouter from './src/routers/products';
+import productRouter from './src/routes/product.route';
 import path from 'node:path';
 import { Socket } from 'node:net';
 
 const app = express();
-const prisma = new PrismaClient();
-let connections: Socket[] = [];
 
 // Middleware
 app.use(express.json());
@@ -27,9 +24,11 @@ const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+// I have no fucking idea, how to gracefully stop application
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);
 
+let connections: Socket[] = [];
 server.on('connection', (connection) => {
     connections.push(connection);
     connection.on(
