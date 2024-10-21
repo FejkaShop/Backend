@@ -2,7 +2,6 @@
 
 -   Author: Pavel Mikula (MIK0486)
 
-
 ## Instalation
 
 Using docker-compose // TODO: Implement
