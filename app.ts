@@ -1,15 +1,13 @@
 import express, { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import morgan from 'morgan';
 import cors from 'cors';
 
-import productRouter from './src/routers/products';
+import productRoutes from './src/routes/product.route';
+import categoryRoutes from './src/routes/category.route';
 import path from 'node:path';
 import { Socket } from 'node:net';
 
 const app = express();
-const prisma = new PrismaClient();
-let connections: Socket[] = [];
 
 // Middleware
 app.use(express.json());
@@ -19,7 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routers
-app.use('/products', productRouter);
+app.use('/products', productRoutes);
+app.use('/categories', categoryRoutes);
 
 const PORT = process.env.PORT || 3000;
 
@@ -27,15 +26,14 @@ const server = app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
 
+// I have no fucking idea, how to gracefully stop application
 process.on('SIGTERM', shutDown);
 process.on('SIGINT', shutDown);
 
+let connections: Socket[] = [];
 server.on('connection', (connection) => {
     connections.push(connection);
-    connection.on(
-        'close',
-        () => (connections = connections.filter((curr) => curr !== connection))
-    );
+    connection.on('close', () => (connections = connections.filter((curr) => curr !== connection)));
 });
 
 function shutDown() {
@@ -47,9 +45,7 @@ function shutDown() {
     });
 
     setTimeout(() => {
-        console.error(
-            'Could not close connections in time, forcefully shutting down'
-        );
+        console.error('Could not close connections in time, forcefully shutting down');
         process.exit(1);
     }, 10000);
 

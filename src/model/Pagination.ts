@@ -1,9 +1,9 @@
 export class Pagination<T> {
     constructor(
-        limit: number,
-        offset: number,
-        totalEntries: number,
-        hasMoreEntries: boolean,
-        entries: T[]
+        public limit: number,
+        public offset: number,
+        public totalEntries: number,
+        public hasMoreEntries: boolean,
+        public entries: T[]
     ) {}
 }

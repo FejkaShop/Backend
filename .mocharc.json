@@ -1,12 +1,6 @@
 {
-  "extension": [
-    "ts"
-  ],
-  "spec": "tests/**/*.ts",
-  "require": [
-    "jsdom-global/register",
-    "ts-node/register",
-    "source-map-support/register"
-  ],
-  "recursive": true
+    "extension": ["ts"],
+    "spec": "tests/**/*.ts",
+    "require": ["jsdom-global/register", "ts-node/register", "source-map-support/register"],
+    "recursive": true
 }

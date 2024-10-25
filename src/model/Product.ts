@@ -1,17 +1,16 @@
 import Joi from 'joi';
-import { Category } from './Category';
 
 export class Product {
     constructor(
-        id: number,
-        name: string,
-        description: string | null,
-        price: number,
-        stock: number,
-        category: Category,
-        images: string[],
-        createdAt: Date,
-        updatedAt: Date
+        public id: number,
+        public name: string,
+        public description: string | null,
+        public price: number,
+        public stock: number,
+        public categoryId: number,
+        public images: string[],
+        public createdAt: Date,
+        public updatedAt: Date
     ) {}
 
     static validate(data: Partial<Product>): Joi.ValidationResult {
