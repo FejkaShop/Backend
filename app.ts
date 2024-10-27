@@ -32,10 +32,7 @@ process.on('SIGINT', shutDown);
 
 server.on('connection', (connection) => {
     connections.push(connection);
-    connection.on(
-        'close',
-        () => (connections = connections.filter((curr) => curr !== connection))
-    );
+    connection.on('close', () => (connections = connections.filter((curr) => curr !== connection)));
 });
 
 function shutDown() {
@@ -47,9 +44,7 @@ function shutDown() {
     });
 
     setTimeout(() => {
-        console.error(
-            'Could not close connections in time, forcefully shutting down'
-        );
+        console.error('Could not close connections in time, forcefully shutting down');
         process.exit(1);
     }, 10000);
 
