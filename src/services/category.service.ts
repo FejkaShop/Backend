@@ -5,6 +5,12 @@ import { Pagination } from '../model/Pagination';
 const prisma: PrismaClient = new PrismaClient();
 
 export class CategoryService {
+    async createCategoryFromObject(data: any): Promise<Category> {
+        return prisma.category.create({
+            data: data
+        });
+    }
+
     async createCategory(data: Category): Promise<Category> {
         return prisma.category.create({
             data: data
