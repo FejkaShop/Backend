@@ -2,9 +2,9 @@ name: NodeJS CI
 
 on:
     push:
-        branches: ['master', 'prettier']
+        branches: ['master', 'development', 'SWI-34-Konfigurace-automatick-ch-test-v-r-mci-CI-unit-a-integration-testy-']
     pull_request:
-        branches: ['master', 'prettier']
+        branches: ['master', 'development','SWI-34-Konfigurace-automatick-ch-test-v-r-mci-CI-unit-a-integration-testy-']
 
 jobs:
     prettier:
@@ -67,7 +67,7 @@ jobs:
             - name: Run database
               run: |
                     docker-compose up
-                    
+
             - name: Run backend
               run: |
                     npx prisma generate
