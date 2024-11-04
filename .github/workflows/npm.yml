@@ -67,6 +67,11 @@ jobs:
 
             - run: npm ci
 
+            - name: Run migrations
+              run: |
+                    npx prisma generate
+                    npx prisma migrate dev --name init
+
             - name: Run tests
               run: |
                     npm test
