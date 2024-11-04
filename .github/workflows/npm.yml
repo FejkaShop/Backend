@@ -2,7 +2,7 @@ name: NodeJS CI
 
 on:
     push:
-        branches: ['master', 'development', 'SWI-34-Konfigurace-automatick-ch-test-v-r-mci-CI-unit-a-integration-testy-']
+        branches: ['master', 'development','SWI-34-Konfigurace-automatick-ch-test-v-r-mci-CI-unit-a-integration-testy-']
     pull_request:
         branches: ['master', 'development','SWI-34-Konfigurace-automatick-ch-test-v-r-mci-CI-unit-a-integration-testy-']
 
@@ -67,12 +67,6 @@ jobs:
 
             - run: npm ci
 
-            - name: Run backend
-              run: |
-                    npx prisma generate
-                    npx prisma migrate dev --name init
-                    npm run start
-            
             - name: Run tests
               run: |
                     npm test
