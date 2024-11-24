@@ -1,17 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { Category } from '../model/Category';
+import { Category, Prisma, PrismaClient } from '@prisma/client';
 import { Pagination } from '../model/Pagination';
 
 const prisma: PrismaClient = new PrismaClient();
 
 export class CategoryService {
-    async createCategoryFromObject(data: any): Promise<Category> {
-        return prisma.category.create({
-            data: data
-        });
-    }
-
-    async createCategory(data: Category): Promise<Category> {
+    async createCategory(data: Prisma.CategoryCreateInput): Promise<Category> {
         return prisma.category.create({
             data: data
         });
@@ -36,7 +29,7 @@ export class CategoryService {
         });
     }
 
-    async updateCategory(id: number, data: Partial<Category>): Promise<Category> {
+    async updateCategory(id: number, data: Prisma.CategoryUpdateInput): Promise<Category> {
         return prisma.category.update({
             where: { id },
             data: data

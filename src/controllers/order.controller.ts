@@ -1,19 +1,16 @@
 import { Request, Response } from 'express';
-import { Prisma, Product } from '@prisma/client';
-import { ProductService } from '../services/product.service';
+import { Order, OrderStatus, Prisma } from '@prisma/client';
 import Joi from 'joi';
+import { OrderService } from '../services/order.service';
 import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
-const productService: ProductService = new ProductService();
+const orderService: OrderService = new OrderService();
 
-function validate(data: Partial<Product>): Joi.ValidationResult {
+function validate(data: Partial<Order>): Joi.ValidationResult {
     const schema = Joi.object({
-        name: Joi.string().min(1).required(),
-        description: Joi.string().allow(null).optional(),
-        price: Joi.number().positive().required(),
-        stock: Joi.number().integer().min(0).required(),
-        categoryId: Joi.number().integer().positive().required(),
-        images: Joi.array().items(Joi.string()).optional(),
+        userId: Joi.number().integer().positive().required(),
+        totalAmount: Joi.number().positive().required(),
+        status: Joi.string().valid(OrderStatus.CANCELED, OrderStatus.PENDING, OrderStatus.COMPLETED).required(),
         createdAt: Joi.date().optional(),
         updatedAt: Joi.date().optional()
     });
@@ -21,8 +18,8 @@ function validate(data: Partial<Product>): Joi.ValidationResult {
     return schema.validate(data);
 }
 
-export class ProductController {
-    public async createProduct(req: Request, res: Response) {
+export class OrderController {
+    async createOrder(req: Request, res: Response) {
         try {
             const { error, value } = validate(req.body);
 
@@ -30,32 +27,32 @@ export class ProductController {
                 return res.status(400).json({ error: error.message });
             }
 
-            const newEntry = await productService.createProduct(value);
+            const newEntry = await orderService.createOrder(value);
             res.status(201).json(newEntry);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to create product' });
+            res.status(500).json({ error: 'Failed to create category' });
         }
     }
 
-    public async getProducts(req: Request, res: Response) {
+    async getOrders(req: Request, res: Response) {
         try {
             const limit: number = parseInt(<string>req.query.limit) || 10;
             const offset: number = parseInt(<string>req.query.offset) || 0;
 
-            const pagination = await productService.getProducts(limit, offset);
+            const pagination = await orderService.getOrders(limit, offset);
             res.json(pagination);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to fetch products' });
+            res.status(500).json({ error: 'Failed to fetch categories' });
         }
     }
 
-    public async getProductById(req: Request, res: Response) {
+    async getOrderById(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            const entry = await productService.getProductById(parseInt(id));
+            const entry = await orderService.getOrderById(parseInt(id));
 
             if (!entry) {
                 return res.status(404).json({ error: `Entry with ID '${id}' not found` });
@@ -64,11 +61,11 @@ export class ProductController {
             res.json(entry);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to fetch product' });
+            res.status(500).json({ error: 'Failed to fetch category' });
         }
     }
 
-    async updateProduct(req: Request, res: Response) {
+    async updateOrder(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
@@ -78,8 +75,8 @@ export class ProductController {
                 return res.status(400).json({ error: error.message });
             }
 
-            const updatedProduct = await productService.updateProduct(parseInt(id), value);
-            res.json(updatedProduct);
+            const updatedEntry = await orderService.updateOrder(parseInt(id), value);
+            res.json(updatedEntry);
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
                 return res.status(404).json({ error: `Entry with ID '${id}' not found` });
@@ -89,11 +86,11 @@ export class ProductController {
         }
     }
 
-    async deleteProduct(req: Request, res: Response) {
+    async deleteOrder(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            await productService.deleteProduct(parseInt(id));
+            await orderService.deleteOrder(parseInt(id));
 
             res.status(204).send();
         } catch (error) {

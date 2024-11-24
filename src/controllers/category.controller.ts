@@ -1,23 +1,31 @@
 import { Request, Response } from 'express';
-import { Category } from '../model/Category';
-import { Prisma } from '@prisma/client';
-import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
+import { Category, Prisma } from '@prisma/client';
 import { CategoryService } from '../services/category.service';
-import { Pagination } from '../model/Pagination';
+import Joi from 'joi';
+import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
 const categoryService: CategoryService = new CategoryService();
+
+function validate(data: Partial<Category>): Joi.ValidationResult {
+    const schema = Joi.object({
+        name: Joi.string().min(1).required(),
+        description: Joi.string().allow(null).optional()
+    });
+
+    return schema.validate(data);
+}
 
 export class CategoryController {
     async createCategory(req: Request, res: Response) {
         try {
-            const { error, value } = Category.validate(req.body);
+            const { error, value } = validate(req.body);
 
             if (error) {
                 return res.status(400).json({ error: error.message });
             }
 
-            const newCategory: Category = await categoryService.createCategory(value);
-            res.status(201).json(newCategory);
+            const newEntry = await categoryService.createCategory(value);
+            res.status(201).json(newEntry);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Failed to create category' });
@@ -29,7 +37,7 @@ export class CategoryController {
             const limit: number = parseInt(<string>req.query.limit) || 10;
             const offset: number = parseInt(<string>req.query.offset) || 0;
 
-            const pagination: Pagination<Category> = await categoryService.getCategories(limit, offset);
+            const pagination = await categoryService.getCategories(limit, offset);
             res.json(pagination);
         } catch (error) {
             console.error(error);
@@ -41,13 +49,13 @@ export class CategoryController {
         const { id } = req.params;
 
         try {
-            const category = await categoryService.getCategoryById(parseInt(id));
+            const entry = await categoryService.getCategoryById(parseInt(id));
 
-            if (!category) {
-                return res.status(404).json({ error: `Category with ID '${id}' not found` });
+            if (!entry) {
+                return res.status(404).json({ error: `Entry with ID '${id}' not found` });
             }
 
-            res.json(category);
+            res.json(entry);
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Failed to fetch category' });
@@ -58,17 +66,17 @@ export class CategoryController {
         const { id } = req.params;
 
         try {
-            const { error, value } = Category.validate(req.body);
+            const { error, value } = validate(req.body);
 
             if (error) {
                 return res.status(400).json({ error: error.message });
             }
 
-            const updatedCategory: Category = await categoryService.updateCategory(parseInt(id), value);
-            res.json(updatedCategory);
+            const updatedEntry = await categoryService.updateCategory(parseInt(id), value);
+            res.json(updatedEntry);
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
-                return res.status(404).json({ error: `Category with ID '${id}' not found` });
+                return res.status(404).json({ error: `Entry with ID '${id}' not found` });
             }
 
             res.status(500).json({ error });
@@ -85,7 +93,7 @@ export class CategoryController {
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
                 return res.status(404).json({
-                    error: `Category with ID '${id}' not found`
+                    error: `Entry with ID '${id}' not found`
                 });
             }
 

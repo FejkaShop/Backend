@@ -1,27 +1,27 @@
 import express, { Request, Response, Router } from 'express';
-import { ProductController } from '../controllers/product.controller';
+import { UserController } from '../controllers/user.controller';
 
 const router: Router = express.Router();
-const productController = new ProductController();
+const userController = new UserController();
 
 router.post('/', async (req: Request, res: Response) => {
-    await productController.createProduct(req, res);
+    await userController.createUser(req, res);
 });
 
 router.get('/', async (req: Request, res: Response) => {
-    await productController.getProducts(req, res);
+    await userController.getUsers(req, res);
 });
 
 router.get('/:id', async (req: Request, res: Response) => {
-    await productController.getProductById(req, res);
+    await userController.getUserById(req, res);
 });
 
 router.put('/:id', async (req: Request, res: Response) => {
-    await productController.updateProduct(req, res);
+    await userController.updateUser(req, res);
 });
 
 router.delete('/:id', async (req: Request, res: Response) => {
-    await productController.deleteProduct(req, res);
+    await userController.deleteUser(req, res);
 });
 
 export default router;

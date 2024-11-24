@@ -1,7 +1,6 @@
 import { expect } from 'chai';
-import { PrismaClient } from '@prisma/client';
+import { Category, PrismaClient } from '@prisma/client';
 import { CategoryService } from '../src/services/category.service';
-import { Category } from '../src/model/Category';
 
 const prisma = new PrismaClient();
 const categoryService = new CategoryService();
@@ -23,7 +22,7 @@ describe('CategoryService', () => {
     describe('createCategory', () => {
         it('should create a new category', async () => {
             const categoryData = { name: 'Test Category', description: 'Test Description' };
-            const createdCategory = await categoryService.createCategoryFromObject(categoryData);
+            const createdCategory = await categoryService.createCategory(categoryData);
 
             expect(createdCategory).to.have.property('id');
             expect(createdCategory.name).to.equal('Test Category');

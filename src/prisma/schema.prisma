@@ -18,7 +18,7 @@ model User {
   updatedAt DateTime  @updatedAt
   orders    Order[]
   reviews   Review[]
-  Address   Address[]
+  address   Address?  // Single address per user
 }
 
 // Enum for user roles
@@ -61,7 +61,7 @@ model Order {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   orderItems  OrderItem[]
-  Payment     Payment[]
+  payment     Payment?    // Single payment per order
 }
 
 // Enum for order status
@@ -97,9 +97,9 @@ model Review {
 
 // Address model for shipping information
 model Address {
-  id         Int      @id @default(autoincrement())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int
+  id         Int     @id @default(autoincrement())
+  user       User    @relation(fields: [userId], references: [id])
+  userId     Int     @unique  // Ensure only one address per user
   street     String
   city       String
   state      String
@@ -113,7 +113,7 @@ model Address {
 model Payment {
   id            Int           @id @default(autoincrement())
   order         Order         @relation(fields: [orderId], references: [id])
-  orderId       Int
+  orderId       Int           @unique // Ensure only one payment per order
   amount        Float
   paymentMethod PaymentMethod
   status        PaymentStatus @default(PENDING)

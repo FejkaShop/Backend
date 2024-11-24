@@ -1,9 +1,12 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 
 import productRoutes from './src/routes/product.route';
 import categoryRoutes from './src/routes/category.route';
+import userRoutes from './src/routes/user.route';
+import orderRoute from './src/routes/order.route';
+import imageRoute from './src/routes/image.route';
 import path from 'node:path';
 import { Socket } from 'node:net';
 
@@ -19,6 +22,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routers
 app.use('/products', productRoutes);
 app.use('/categories', categoryRoutes);
+app.use('/users', userRoutes);
+app.use('/orders', orderRoute);
+app.use('/images', imageRoute);
 
 const PORT = process.env.PORT || 3000;
 

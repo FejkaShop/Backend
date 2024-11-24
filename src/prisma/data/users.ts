@@ -1,5 +1,4 @@
-import { UserRole } from '../../model/User';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, UserRole } from '@prisma/client';
 
 const entries = [
     {
@@ -7,7 +6,7 @@ const entries = [
         password: 'securepassword',
         name: 'John Doe',
         role: UserRole.CUSTOMER,
-        Address: {
+        address: {
             create: {
                 street: '123 Main St',
                 city: 'Anytown',
@@ -19,7 +18,7 @@ const entries = [
     },
     {
         email: 'admin@example.com',
-        password: 'securepassword', // You might want to hash this in a real app
+        password: 'securepassword',
         name: 'Admin User',
         role: UserRole.ADMIN
     }

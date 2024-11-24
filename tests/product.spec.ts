@@ -1,7 +1,6 @@
 import { expect } from 'chai';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Product } from '@prisma/client';
 import { ProductService } from '../src/services/product.service';
-import { Product } from '../src/model/Product';
 import { CategoryService } from '../src/services/category.service';
 
 const prisma = new PrismaClient();
@@ -39,7 +38,7 @@ describe('ProductService', () => {
                 categoryId: testCategoryId,
                 stock: 10
             };
-            const createdProduct = await productService.createProductFromObject(productData);
+            const createdProduct = await productService.createProduct(productData);
 
             expect(createdProduct).to.have.property('id');
             expect(createdProduct.name).to.equal('Test Product');

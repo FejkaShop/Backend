@@ -1,17 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-import { Product } from '../model/Product';
+import { Prisma, PrismaClient, Product } from '@prisma/client';
 import { Pagination } from '../model/Pagination';
 
 const prisma: PrismaClient = new PrismaClient();
 
 export class ProductService {
-    async createProductFromObject(data: any): Promise<Product> {
-        return prisma.product.create({
-            data: data
-        });
-    }
-
-    async createProduct(data: Product): Promise<Product> {
+    async createProduct(data: Prisma.ProductUncheckedCreateInput): Promise<Product> {
         return prisma.product.create({
             data: data
         });
@@ -28,6 +21,12 @@ export class ProductService {
             }
         });
 
+        const url = process.env.SERVER_URL || 'http://localhost:3000';
+
+        entries.forEach((product) => {
+            product.images = product.images.map((image) => `${url}/images/${image}`);
+        });
+
         const hasMore: boolean = offset + limit < total;
         const pagination: Pagination<Product> = new Pagination<Product>(limit, offset, total, hasMore, entries);
         return new Promise((resolve) => resolve(pagination));
@@ -42,7 +41,7 @@ export class ProductService {
         });
     }
 
-    async updateProduct(id: number, data: Partial<Product>): Promise<Product> {
+    async updateProduct(id: number, data: Prisma.ProductUpdateInput): Promise<Product> {
         return prisma.product.update({
             where: { id },
             data: data
