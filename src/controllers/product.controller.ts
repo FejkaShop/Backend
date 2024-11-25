@@ -9,7 +9,7 @@ const productService: ProductService = new ProductService();
 function validate(data: Partial<Product>): Joi.ValidationResult {
     const schema = Joi.object({
         name: Joi.string().min(1).required(),
-        description: Joi.string().allow(null).optional(),
+        description: Joi.string().optional(),
         price: Joi.number().positive().required(),
         stock: Joi.number().integer().min(0).required(),
         categoryId: Joi.number().integer().positive().required(),

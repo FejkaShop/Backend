@@ -1,18 +1,39 @@
 import { Request, Response } from 'express';
-import { Order, OrderStatus, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import Joi from 'joi';
 import { OrderService } from '../services/order.service';
+import { OrderCreateRequest, OrderUpdateRequest } from '../model/Order';
 import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
 const orderService: OrderService = new OrderService();
 
-function validate(data: Partial<Order>): Joi.ValidationResult {
+function validateCreateRequest(data: OrderCreateRequest): Joi.ValidationResult {
     const schema = Joi.object({
-        userId: Joi.number().integer().positive().required(),
-        totalAmount: Joi.number().positive().required(),
-        status: Joi.string().valid(OrderStatus.CANCELED, OrderStatus.PENDING, OrderStatus.COMPLETED).required(),
-        createdAt: Joi.date().optional(),
-        updatedAt: Joi.date().optional()
+        userId: Joi.number().positive().required(),
+        orderItems: Joi.array()
+            .items(
+                Joi.object({
+                    productId: Joi.number().positive().required(),
+                    quantity: Joi.number().positive().required()
+                })
+            )
+            .required()
+    });
+
+    return schema.validate(data);
+}
+
+function validateUpdateRequest(data: OrderUpdateRequest): Joi.ValidationResult {
+    const schema = Joi.object({
+        orderItems: Joi.array()
+            .items(
+                Joi.object({
+                    productId: Joi.number().positive().required(),
+                    quantity: Joi.number().positive().required()
+                })
+            )
+            .optional(),
+        state: Joi.string().valid('PENDING', 'COMPLETED', 'CANCELED').optional()
     });
 
     return schema.validate(data);
@@ -21,7 +42,7 @@ function validate(data: Partial<Order>): Joi.ValidationResult {
 export class OrderController {
     async createOrder(req: Request, res: Response) {
         try {
-            const { error, value } = validate(req.body);
+            const { error, value } = validateCreateRequest(req.body);
 
             if (error) {
                 return res.status(400).json({ error: error.message });
@@ -69,7 +90,7 @@ export class OrderController {
         const { id } = req.params;
 
         try {
-            const { error, value } = validate(req.body);
+            const { error, value } = validateUpdateRequest(req.body);
 
             if (error) {
                 return res.status(400).json({ error: error.message });
