@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { PrismaClient, Product } from '@prisma/client';
 import { ProductService } from '../src/services/product.service';
 import { CategoryService } from '../src/services/category.service';
+import { clearDatabase } from './clear';
 
 const prisma = new PrismaClient();
 const productService = new ProductService();
@@ -13,8 +14,7 @@ describe('ProductService', () => {
 
     before(async () => {
         // Clear the database and create a category to associate with products
-        await prisma.product.deleteMany({});
-        await prisma.category.deleteMany({});
+        await clearDatabase();
 
         const category = await prisma.category.create({
             data: { name: 'Test Category', description: 'Test Description' }
@@ -24,8 +24,7 @@ describe('ProductService', () => {
 
     after(async () => {
         // Clean up after all tests are done
-        await prisma.product.deleteMany({});
-        await prisma.category.deleteMany({});
+        await clearDatabase();
         await prisma.$disconnect();
     });
 
