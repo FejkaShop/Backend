@@ -24,4 +24,8 @@ router.delete('/:id', async (req: Request, res: Response) => {
     await orderController.deleteOrder(req, res);
 });
 
+router.post('/:id/pay', async (req: Request, res: Response) => {
+    await orderController.payOrder(req, res);
+});
+
 export default router;

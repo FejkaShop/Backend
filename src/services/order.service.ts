@@ -1,6 +1,6 @@
-import { Order, Prisma, PrismaClient } from '@prisma/client';
+import { Order, OrderStatus, Prisma, PrismaClient, PaymentMethod } from '@prisma/client';
 import { Pagination } from '../model/Pagination';
-import { OrderCreateRequest, OrderUpdateRequest } from '../model/Order';
+import { OrderCreateRequest, OrderPaymentRequest, OrderUpdateRequest } from '../model/Order';
 
 const prisma = new PrismaClient();
 
@@ -103,6 +103,45 @@ export class OrderService {
     async deleteOrder(id: number): Promise<void> {
         await prisma.order.delete({
             where: { id }
+        });
+    }
+
+    async payOrder(id: number, data: OrderPaymentRequest): Promise<Order> {
+        let method: PaymentMethod = PaymentMethod.PAYPAL;
+
+        switch (data.method.toUpperCase()) {
+            case "PAYPAL": {
+                method = PaymentMethod.PAYPAL;
+                break;
+            }
+
+            case "CREDIT_CARD": {
+                method = PaymentMethod.CREDIT_CARD;
+                break;
+            }
+
+            case "BANK_TRANSFER": {
+                method = PaymentMethod.BANK_TRANSFER;
+                break;
+            }
+        }
+
+        return prisma.order.update({
+            where: { id },
+            include: {
+                user: true,
+                orderItems: true,
+                payment: true
+            },
+            data: {
+                status: OrderStatus.COMPLETED,
+                payment: {
+                    create: {
+                        amount: data.amount,
+                        paymentMethod: method
+                    }
+                }
+            }
         });
     }
 }

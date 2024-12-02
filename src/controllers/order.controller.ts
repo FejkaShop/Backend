@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { Prisma } from '@prisma/client';
+import { PaymentMethod, Prisma } from '@prisma/client';
 import Joi from 'joi';
 import { OrderService } from '../services/order.service';
-import { OrderCreateRequest, OrderUpdateRequest } from '../model/Order';
+import { OrderCreateRequest, OrderPaymentRequest, OrderUpdateRequest } from '../model/Order';
 import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
 const orderService: OrderService = new OrderService();
@@ -34,6 +34,15 @@ function validateUpdateRequest(data: OrderUpdateRequest): Joi.ValidationResult {
             )
             .optional(),
         state: Joi.string().valid('PENDING', 'COMPLETED', 'CANCELED').optional()
+    });
+
+    return schema.validate(data);
+}
+
+function validatePaymentRequest(data: OrderPaymentRequest): Joi.ValidationResult {
+    const schema = Joi.object({
+        method: Joi.string().valid(PaymentMethod.PAYPAL, PaymentMethod.BANK_TRANSFER, PaymentMethod.CREDIT_CARD).required(),
+        amount: Joi.number().positive().required()
     });
 
     return schema.validate(data);
@@ -112,8 +121,30 @@ export class OrderController {
 
         try {
             await orderService.deleteOrder(parseInt(id));
-
             res.status(204).send();
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
+                return res.status(404).json({
+                    error: `Entry with ID '${id}' not found`
+                });
+            }
+
+            res.status(500).json({ error });
+        }
+    }
+
+    async payOrder(req: Request, res: Response) {
+        const { id } = req.params;
+
+        try {
+            const { error, value } = validatePaymentRequest(req.body);
+
+            if (error) {
+                return res.status(400).json({ error: error.message });
+            }
+
+            const payedEntry = await orderService.payOrder(parseInt(id), value);
+            res.status(200).json(payedEntry);
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
                 return res.status(404).json({
