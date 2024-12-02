@@ -1,9 +1,9 @@
-import express, { NextFunction, Request, Response, Router } from 'express';
+import express, { Response, Router } from 'express';
 
 const router: Router = express.Router();
 
 /* GET home page. */
-router.get('/', function (req: Request, res: Response, next: NextFunction) {
+router.get('/', function (res: Response) {
     res.render('index', { title: 'Express' });
 });
 

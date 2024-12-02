@@ -1,6 +1,6 @@
 # Backend Application for ZPSWI Project
 
--   Author: Pavel Mikula (MIK0486)
+- Author: Pavel Mikula (MIK0486)
 
 ## Instalation
 

@@ -1,30 +1,54 @@
 import { Request, Response } from 'express';
-import { Category, Prisma } from '@prisma/client';
-import { CategoryService } from '../services/category.service';
+import { Prisma } from '@prisma/client';
 import Joi from 'joi';
+import { OrderService } from '../services/order.service';
+import { OrderCreateRequest, OrderUpdateRequest } from '../model/Order';
 import PrismaClientKnownRequestError = Prisma.PrismaClientKnownRequestError;
 
-const categoryService: CategoryService = new CategoryService();
+const orderService: OrderService = new OrderService();
 
-function validate(data: Partial<Category>): Joi.ValidationResult {
+function validateCreateRequest(data: OrderCreateRequest): Joi.ValidationResult {
     const schema = Joi.object({
-        name: Joi.string().min(1).required(),
-        description: Joi.string().allow(null).optional()
+        userId: Joi.number().positive().required(),
+        orderItems: Joi.array()
+            .items(
+                Joi.object({
+                    productId: Joi.number().positive().required(),
+                    quantity: Joi.number().positive().required()
+                })
+            )
+            .required()
     });
 
     return schema.validate(data);
 }
 
-export class CategoryController {
-    async createCategory(req: Request, res: Response) {
+function validateUpdateRequest(data: OrderUpdateRequest): Joi.ValidationResult {
+    const schema = Joi.object({
+        orderItems: Joi.array()
+            .items(
+                Joi.object({
+                    productId: Joi.number().positive().required(),
+                    quantity: Joi.number().positive().required()
+                })
+            )
+            .optional(),
+        state: Joi.string().valid('PENDING', 'COMPLETED', 'CANCELED').optional()
+    });
+
+    return schema.validate(data);
+}
+
+export class OrderController {
+    async createOrder(req: Request, res: Response) {
         try {
-            const { error, value } = validate(req.body);
+            const { error, value } = validateCreateRequest(req.body);
 
             if (error) {
                 return res.status(400).json({ error: error.message });
             }
 
-            const newEntry = await categoryService.createCategory(value);
+            const newEntry = await orderService.createOrder(value);
             res.status(201).json(newEntry);
         } catch (error) {
             console.error(error);
@@ -32,12 +56,12 @@ export class CategoryController {
         }
     }
 
-    async getCategories(req: Request, res: Response) {
+    async getOrders(req: Request, res: Response) {
         try {
             const limit: number = parseInt(<string>req.query.limit) || 10;
             const offset: number = parseInt(<string>req.query.offset) || 0;
 
-            const pagination = await categoryService.getCategories(limit, offset);
+            const pagination = await orderService.getOrders(limit, offset);
             res.json(pagination);
         } catch (error) {
             console.error(error);
@@ -45,11 +69,11 @@ export class CategoryController {
         }
     }
 
-    async getCategoryById(req: Request, res: Response) {
+    async getOrderById(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            const entry = await categoryService.getCategoryById(parseInt(id));
+            const entry = await orderService.getOrderById(parseInt(id));
 
             if (!entry) {
                 return res.status(404).json({ error: `Entry with ID '${id}' not found` });
@@ -62,17 +86,17 @@ export class CategoryController {
         }
     }
 
-    async updateCategory(req: Request, res: Response) {
+    async updateOrder(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            const { error, value } = validate(req.body);
+            const { error, value } = validateUpdateRequest(req.body);
 
             if (error) {
                 return res.status(400).json({ error: error.message });
             }
 
-            const updatedEntry = await categoryService.updateCategory(parseInt(id), value);
+            const updatedEntry = await orderService.updateOrder(parseInt(id), value);
             res.json(updatedEntry);
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2025') {
@@ -83,11 +107,11 @@ export class CategoryController {
         }
     }
 
-    async deleteCategory(req: Request, res: Response) {
+    async deleteOrder(req: Request, res: Response) {
         const { id } = req.params;
 
         try {
-            await categoryService.deleteCategory(parseInt(id));
+            await orderService.deleteOrder(parseInt(id));
 
             res.status(204).send();
         } catch (error) {
