@@ -44,9 +44,7 @@ describe('OrderService', () => {
         it('should create a new order with valid data', async () => {
             const orderData = {
                 userId: testUser.id,
-                orderItems: [
-                    { productId: testProduct.id, quantity: 2 }
-                ]
+                orderItems: [{ productId: testProduct.id, quantity: 2 }]
             };
 
             const createdOrder = await orderService.createOrder(orderData);

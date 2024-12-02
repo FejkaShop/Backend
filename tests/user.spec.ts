@@ -26,7 +26,7 @@ describe('UserService', () => {
                 email: 'testuser@example.com',
                 password: 'password123',
                 name: 'Test User',
-                role: UserRole.CUSTOMER,
+                role: UserRole.CUSTOMER
             };
             const createdUser = await userService.createUser(userData);
 
@@ -41,7 +41,7 @@ describe('UserService', () => {
             const userData = {
                 email: 'invalid-email',
                 password: 'password123',
-                role: UserRole.CUSTOMER,
+                role: UserRole.CUSTOMER
             };
 
             try {
@@ -107,7 +107,7 @@ describe('UserService', () => {
             try {
                 await userService.deleteUser(9999);
                 throw new Error('Test failed - expected error for non-existent user');
-            }  catch (error) {
+            } catch (error) {
                 const err = error as Error;
                 expect(err.message).to.not.be.null;
             }
