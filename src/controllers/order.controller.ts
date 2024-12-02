@@ -41,7 +41,9 @@ function validateUpdateRequest(data: OrderUpdateRequest): Joi.ValidationResult {
 
 function validatePaymentRequest(data: OrderPaymentRequest): Joi.ValidationResult {
     const schema = Joi.object({
-        method: Joi.string().valid(PaymentMethod.PAYPAL, PaymentMethod.BANK_TRANSFER, PaymentMethod.CREDIT_CARD).required(),
+        method: Joi.string()
+            .valid(PaymentMethod.PAYPAL, PaymentMethod.BANK_TRANSFER, PaymentMethod.CREDIT_CARD)
+            .required(),
         amount: Joi.number().positive().required()
     });
 

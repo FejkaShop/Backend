@@ -15,4 +15,4 @@ export type OrderItem = {
 export type OrderPaymentRequest = {
     method: string;
     amount: number;
-}
+};

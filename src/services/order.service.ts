@@ -110,17 +110,17 @@ export class OrderService {
         let method: PaymentMethod = PaymentMethod.PAYPAL;
 
         switch (data.method.toUpperCase()) {
-            case "PAYPAL": {
+            case 'PAYPAL': {
                 method = PaymentMethod.PAYPAL;
                 break;
             }
 
-            case "CREDIT_CARD": {
+            case 'CREDIT_CARD': {
                 method = PaymentMethod.CREDIT_CARD;
                 break;
             }
 
-            case "BANK_TRANSFER": {
+            case 'BANK_TRANSFER': {
                 method = PaymentMethod.BANK_TRANSFER;
                 break;
             }
