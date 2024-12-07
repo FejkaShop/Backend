@@ -63,7 +63,7 @@ export class OrderController {
             res.status(201).json(newEntry);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to create category' });
+            res.status(500).json({ error: 'Failed to create order' });
         }
     }
 
@@ -76,7 +76,7 @@ export class OrderController {
             res.json(pagination);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to fetch categories' });
+            res.status(500).json({ error: 'Failed to fetch orders' });
         }
     }
 
@@ -93,7 +93,7 @@ export class OrderController {
             res.json(entry);
         } catch (error) {
             console.error(error);
-            res.status(500).json({ error: 'Failed to fetch category' });
+            res.status(500).json({ error: 'Failed to fetch order' });
         }
     }
 
