@@ -7,6 +7,7 @@ import categoryRoutes from './src/routes/category.route';
 import userRoutes from './src/routes/user.route';
 import orderRoute from './src/routes/order.route';
 import imageRoute from './src/routes/image.route';
+import reviewRoute from './src/routes/review.route';
 import path from 'node:path';
 import { Socket } from 'node:net';
 
@@ -25,6 +26,7 @@ app.use('/categories', categoryRoutes);
 app.use('/users', userRoutes);
 app.use('/orders', orderRoute);
 app.use('/images', imageRoute);
+app.use('/reviews', reviewRoute);
 
 const PORT = process.env.PORT || 3000;
 
