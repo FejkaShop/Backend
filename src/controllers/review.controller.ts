@@ -33,7 +33,6 @@ export class ReviewController {
 
             res.status(201).json(newEntry);
         } catch (error) {
-
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2003') {
                 return res.status(404).json({ error: `Entry with ID '${productId}' not found` });
             }
@@ -42,7 +41,7 @@ export class ReviewController {
             }
 
             console.error(error);
-            res.status(400).json({ error: "Failed to create review" });
+            res.status(400).json({ error: 'Failed to create review' });
         }
     }
 
@@ -53,11 +52,11 @@ export class ReviewController {
             const reviews = await reviewService.getReviews(limit, offset);
             res.status(200).json(reviews);
         } catch (error) {
-            res.status(400).json({ error: "Failed to fetch reviews" });
+            res.status(400).json({ error: 'Failed to fetch reviews' });
         }
     }
 
-    async getReviewById(req: Request, res: Response){
+    async getReviewById(req: Request, res: Response) {
         const id = parseInt(req.params.id);
         try {
             const review = await reviewService.getReviewById(id);
@@ -67,8 +66,7 @@ export class ReviewController {
                 res.status(404).json({ error: 'Review not found' });
             }
         } catch (error) {
-            res.status(400).json({ error: "Failed to fetch review" });
+            res.status(400).json({ error: 'Failed to fetch review' });
         }
     }
-
 }
