@@ -36,9 +36,9 @@ export class ReviewService {
             }
         });
     }
-    async getReviewsByProductId(productId: number, limit: number, offset: number):Promise<Pagination<Review>>{
+    async getReviewsByProductId(productId: number, limit: number, offset: number): Promise<Pagination<Review>> {
         const total: number = await prisma.review.count({ where: { productId } });
-        const entries =  await prisma.review.findMany({
+        const entries = await prisma.review.findMany({
             take: limit,
             skip: offset,
             where: { productId },
