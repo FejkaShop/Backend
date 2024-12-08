@@ -21,7 +21,7 @@ function validate(data: Partial<Review>): Joi.ValidationResult {
 
 export class ReviewController {
     async createReview(req: Request, res: Response) {
-        const { productId, userId, rating, comment  } = req.body;
+        const { productId, userId, rating, comment } = req.body;
         try {
             const { error, value } = validate(req.body);
 
@@ -33,14 +33,14 @@ export class ReviewController {
 
             res.status(201).json(newEntry);
         } catch (error) {
-
             console.error(error);
 
             if (error instanceof PrismaClientKnownRequestError && error.code === 'P2003') {
-                return res.status(404).json({ error: `User with ID '${userId}' or Product with ID'${productId}' not found` });
+                return res
+                    .status(404)
+                    .json({ error: `User with ID '${userId}' or Product with ID'${productId}' not found` });
             }
-        
-            
+
             res.status(400).json({ error: 'Failed to create review' });
         }
     }
