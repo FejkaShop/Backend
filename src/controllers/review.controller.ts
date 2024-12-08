@@ -69,4 +69,16 @@ export class ReviewController {
             res.status(400).json({ error: 'Failed to fetch review' });
         }
     }
+
+    async getReviewsByProductId(req: Request, res: Response) {
+        const productId = parseInt(req.params.productId);
+        const limit = parseInt(req.query.limit as string) || 10;
+        const offset = parseInt(req.query.offset as string) || 0;
+        try {
+            const reviews = await reviewService.getReviewsByProductId(productId, limit, offset);
+            res.status(200).json(reviews);
+        } catch (error) {
+            res.status(400).json({ error: 'Failed to fetch reviews' });
+        }
+    }
 }

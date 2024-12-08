@@ -16,4 +16,8 @@ router.get('/:id', async (req: Request, res: Response) => {
     await reviewController.getReviewById(req, res);
 });
 
+router.get('/product/:productId', async (req: Request, res: Response) => {
+    await reviewController.getReviewsByProductId(req, res);
+});
+
 export default router;
